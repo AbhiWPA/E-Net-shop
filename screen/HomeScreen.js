@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, Alert } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Alert, ImageBackground } from 'react-native'
 
 const HomeScreen = ({navigation}) => {
 
@@ -7,6 +7,13 @@ const HomeScreen = ({navigation}) => {
         
 
     <View style={styles.body}>
+
+      <ImageBackground 
+        source={require('../assets/home.jpg')}
+        className="h-full w-full absolute"
+        style={styles.ImageBackground}
+      />
+
         <Text style={styles.textOne}>E-Net Computer Shop</Text>
 
         <View style={styles.btnSec}>
@@ -69,17 +76,21 @@ const styles= StyleSheet.create({
       flex:1
     },
     textOne:{
-      color: '#dfe4ea',
+      color: '#991224',
       marginTop: '15%',
       marginBottom:'8%',
-      fontSize: 20,
-      fontWeight: 'bold'
+      fontSize: 35,
+      fontWeight: '900'
     },
     btnSec:{
       backgroundColor: '#3c6382',
       width:'85%',
       height:'14%',
-      margin: '2%'
+      margin: '2%',
+      borderRadius: 40,
+      shadowColor: '#000',
+      shadowOffset: { width: 4, height: 4 },
+      shadowOpacity: 0.6,
     },
     button: {
       alignItems: 'center',
@@ -87,6 +98,7 @@ const styles= StyleSheet.create({
       borderRadius: 8,
       height:'100%',
       backgroundColor: '#487eb0',
+      borderRadius: 40
     },
     btnText:{
       color: '#dcdde1',
@@ -95,4 +107,10 @@ const styles= StyleSheet.create({
       fontSize: 30,
       fontWeight: 'bold'
     },
+
+    ImageBackground : {
+      width: '100%',
+      height: '150%',
+      position: 'absolute',
+  },
   })
