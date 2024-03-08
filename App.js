@@ -11,6 +11,7 @@ import { setupBusinessTable, setupItemTable, setupQuickItemTable } from './scree
 import BusinessScreen from './screen/BusinessScreen';
 import SellScreen from './screen/SellScreen';
 import SellItemScreen from './screen/SellItemScreen';
+import WelcomeScreen from './screen/WelcomeScreen';
 
 const stack = createNativeStackNavigator();
 
@@ -26,7 +27,11 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <stack.Navigator>   
+      <stack.Navigator> 
+      <stack.Screen
+          name= 'Welcome' options={{headerShown: false}}
+          component={WelcomeScreen}
+        />  
         <stack.Screen
           name= 'Home' options={{headerShown: false}}
           component={HomeScreen}
