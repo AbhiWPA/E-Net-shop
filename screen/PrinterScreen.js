@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { searchCustomersByName, updateBalance, saveBusiness, getAllQuickItem, addQuickItem } from './Database';
-import { StyleSheet, Text, View, TextInput, Keyboard, TouchableWithoutFeedback, TouchableOpacity, ScrollView } from 'react-native'
+import { Dropdown } from 'react-native-element-dropdown';
+import { StyleSheet, Text, View, TextInput, Keyboard, TouchableWithoutFeedback, TouchableOpacity, ScrollView, ImageBackground, Drop } from 'react-native'
 
 const PrinterScreen = ({navigation}) => {
 
@@ -28,6 +29,10 @@ const PrinterScreen = ({navigation}) => {
     const [buttonEight, setButtonColorEight] = React.useState('#f5cd79');
     const [selectedItems, setSelectedItems] = React.useState([]);
     const [showAdditionalFields, setShowAdditionalFields] = React.useState(false);
+    const [isFocus, setIsFocus] = React.useState(false);
+    const [selectedDistrict, setSelectedDistrict] = React.useState(null);
+    const [selectedPlace, setSelectedPlace] = React.useState(null);
+    const [selectedService, setSelectedService] = React.useState(null);
 
     useEffect(() => {
 
@@ -254,17 +259,35 @@ const PrinterScreen = ({navigation}) => {
       });
     }
 
+    const handleSelectService = (value) => {
+      setSelectedService(value);
+    };
+
+    const servicesList = [
+      { label: 'Photo Copy', value: '1' },
+      { label: 'B & W Print-Out', value: '2' },
+      { label: 'Color Print-Out', value: '3' },
+      { label: 'Laminating', value: '4' },
+      { label: 'Cover Pages', value: '5' },
+      { label: 'Document Scan', value: '6' },
+    ];
+
     return (
     
     <TouchableWithoutFeedback onPress={handleBackgroundPress}>
     <View style={styles.body}>
       
+    {/* <ImageBackground 
+        source={require('../assets/printer3.jpg')}
+        className="h-full w-full absolute"
+        style={styles.ImageBackground}
+      /> */}
 
       <TouchableOpacity
         style={styles.customerBtn}
         onPress={() => navigation.navigate("Details")}
       >
-        <Text style={styles.processBtnText}>Customers</Text>
+        <Text style={styles.processBtnText}>Manage Customers</Text>
       </TouchableOpacity>
         
       <Text style={styles.textTwo}>Customer</Text>
@@ -296,67 +319,38 @@ const PrinterScreen = ({navigation}) => {
       </ScrollView>
 
 
+    <View style={styles.buttonArea}>
+
+    <Text style={styles.selectorHeaderText}>Select Service : </Text>
+              <Dropdown
+                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                data={servicesList}
+                search
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={!isFocus ? 'Select Here' : '...'}
+                searchPlaceholder="Search..."
+                value={selectedService}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={(item) => {
+                  handleSelectService(item.value);
+                  setIsFocus(false);
+                }}
+                disabled={!selectedDistrict}
+              />
+    </View>
+
     <TouchableOpacity
-        style={[styles.photocopySelectBtn, { backgroundColor: buttonOne }]}
-        onPress={() =>{selectedItemBtn("PhotoCopy")}}
-      >
-        <Text style={styles.commonBtnText}>PCopy</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.bwPrintoutSelectBtn, { backgroundColor: buttonTwo }]}
-        onPress={() =>{selectedItemBtn("PrintOut(BW)")}}
-      >
-        <Text style={styles.commonBtnText}>bwPrint</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.colorprintoutSelectBtn, { backgroundColor: buttonThree }]}
-        onPress={() =>{selectedItemBtn("PrintOut(color)")}}
-      >
-        <Text style={styles.commonBtnText}>coPrint</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.laminateSelectBtn, { backgroundColor: buttonFour }]}
-        onPress={() =>{selectedItemBtn("Laminating")}}
-      >
-        <Text style={styles.commonBtnText}>Lamint</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.coverPageSelectBtn, { backgroundColor: buttonFive }]}
-        onPress={() =>{selectedItemBtn("CoverPage")}}
-      >
-        <Text style={styles.commonBtnText}>CvrPage</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.photoPrintSelectBtn, { backgroundColor: buttonSix }]}
-        onPress={() =>{selectedItemBtn("Scan")}}
-      >
-        <Text style={styles.commonBtnText}>Scan</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.a4SelectBtn, { backgroundColor: buttonSeven }]}
-        onPress={() =>{selectedPageType("A4")}}
-      >
-        <Text style={styles.commonBtnText}>A4</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.a3SelectBtn, { backgroundColor: buttonEight }]}
-        onPress={() =>{selectedPageType("A3")}}
-      >
-        <Text style={styles.commonBtnText}>A3</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
         style={[styles.dropDownBtn]}
         onPress={openDropDown}
       >
-        <Text style={styles.commonBtnText}>+</Text>
+        <Text style={styles.commonBtnText}>Add New Service</Text>
       </TouchableOpacity>
 
   {showAdditionalFields && (
@@ -503,14 +497,17 @@ const styles= StyleSheet.create({
         height: 40,
         width:'45%',
         borderWidth: 1,
+        paddingLeft: 10,
         marginTop:'-8%',
         marginLeft:'10%',
         borderTopColor:'#0a3d62',
         borderLeftColor:'#0a3d62',
         borderRightColor:'#0a3d62',
         borderBottomColor:'#fff',
+        backgroundColor: '#8c8c8b',
         color:'#fff',
         fontSize:18,
+        borderRadius: 10
       },
       quickInput: {
         position:'absolute',
@@ -570,11 +567,12 @@ const styles= StyleSheet.create({
         marginTop:'10%',
       },
       searchBtn:{
-        backgroundColor:'#fab1a0',
+        backgroundColor:'#2d6e14',
         right:'-40%',
         marginTop:'-8%',
         padding:'1%',
         borderRadius:3,
+        color: '#fff'
       },
       balance:{
         color:'#EA2027',
@@ -582,113 +580,115 @@ const styles= StyleSheet.create({
         marginLeft:'55%',
         marginTop:'-10%'
       },
-      photocopySelectBtn:{
-        backgroundColor:'#f5cd79',
-        paddingLeft:'7%',
-        paddingRight:'7%',
-        paddingBottom:'2%',
-        paddingTop:'1%',
-        marginTop:'25%',
-        marginLeft:'-65%'
-      },
-      bwPrintoutSelectBtn:{
-        backgroundColor:'#f5cd79',
-        paddingLeft:'7%',
-        paddingRight:'7%',
-        paddingBottom:'2%',
-        paddingTop:'1%',
-        marginTop:'-8.5%',
-        marginLeft:'-8%'
-      },
-      colorprintoutSelectBtn:{
-        backgroundColor:'#f5cd79',
-        paddingLeft:'7%',
-        paddingRight:'7%',
-        paddingBottom:'2%',
-        paddingTop:'1%',
-        marginTop:'-8.5%',
-        marginLeft:'51%'
-      },
-      laminateSelectBtn:{
-        backgroundColor:'#f5cd79',
-        paddingLeft:'7%',
-        paddingRight:'7%',
-        paddingBottom:'2%',
-        paddingTop:'1%',
-        marginTop:'1%',
-        marginLeft:'-64%'
-      },
-      coverPageSelectBtn:{
-        backgroundColor:'#f5cd79',
-        paddingLeft:'7%',
-        paddingRight:'7%',
-        paddingBottom:'2%',
-        paddingTop:'1%',
-        marginTop:'-8.5%',
-        marginLeft:'-4%'
-      },
-      photoPrintSelectBtn:{
-        backgroundColor:'#f5cd79',
-        paddingLeft:'7%',
-        paddingRight:'7%',
-        paddingBottom:'2%',
-        paddingTop:'1%',
-        marginTop:'-8.5%',
-        marginLeft:'52%'
-      },
-      a4SelectBtn:{
-        backgroundColor:'#f5cd79',
-        paddingLeft:'12%',
-        paddingRight:'12%',
-        paddingBottom:'0.5%',
-        paddingTop:'1%',
-        marginTop:'1.5%',
-        marginLeft:'-50%'
-      },
-      a3SelectBtn:{
-        backgroundColor:'#f5cd79',
-        paddingLeft:'12%',
-        paddingRight:'12%',
-        paddingBottom:'0.5%',
-        paddingTop:'1%',
-        marginTop:'-7%',
-        marginLeft:'15%'
-      },
-      cancelBtn:{
-        backgroundColor:'#c0392b',
-        marginTop:'-20%',
-        marginLeft:'52%',
-        marginBottom:'0.5%',
-        width:'45%',
-      },
-      addBtn:{
-        position:'absolute',
-        backgroundColor:'#00b894',
-        marginTop:'28%',
-        marginLeft:'52%',
-        marginBottom:'0.5%',
-        width:'36%',
-      },
-      abstractBtn:{
-        backgroundColor:'#f5cd79',
-        paddingLeft:'5%',
-        paddingRight:'5%',
-        borderColor:'black',
-        marginBottom:'0.5%',
-        width:'45%',
-        marginLeft:'-20%'
-      },
-      dropDownBtn:{
-        backgroundColor:'#f5cd79',
-        paddingLeft:'3%',
-        paddingRight:'3%',
-        marginTop:'-5.75%',
-        marginLeft:'55%',
-        flexDirection: 'column',
-      },
+      // photocopySelectBtn:{
+      //   backgroundColor:'#f5cd79',
+      //   paddingLeft:'7%',
+      //   paddingRight:'7%',
+      //   paddingBottom:'2%',
+      //   paddingTop:'1%',
+      //   marginTop:'25%',
+      //   marginLeft:'-65%'
+      // },
+      // bwPrintoutSelectBtn:{
+      //   backgroundColor:'#f5cd79',
+      //   paddingLeft:'7%',
+      //   paddingRight:'7%',
+      //   paddingBottom:'2%',
+      //   paddingTop:'1%',
+      //   marginTop:'-8.5%',
+      //   marginLeft:'-8%'
+      // },
+      // colorprintoutSelectBtn:{
+      //   backgroundColor:'#f5cd79',
+      //   paddingLeft:'7%',
+      //   paddingRight:'7%',
+      //   paddingBottom:'2%',
+      //   paddingTop:'1%',
+      //   marginTop:'-8.5%',
+      //   marginLeft:'51%'
+      // },
+      // laminateSelectBtn:{
+      //   backgroundColor:'#f5cd79',
+      //   paddingLeft:'7%',
+      //   paddingRight:'7%',
+      //   paddingBottom:'2%',
+      //   paddingTop:'1%',
+      //   marginTop:'1%',
+      //   marginLeft:'-64%'
+      // },
+      // coverPageSelectBtn:{
+      //   backgroundColor:'#f5cd79',
+      //   paddingLeft:'7%',
+      //   paddingRight:'7%',
+      //   paddingBottom:'2%',
+      //   paddingTop:'1%',
+      //   marginTop:'-8.5%',
+      //   marginLeft:'-4%'
+      // },
+      // photoPrintSelectBtn:{
+      //   backgroundColor:'#f5cd79',
+      //   paddingLeft:'7%',
+      //   paddingRight:'7%',
+      //   paddingBottom:'2%',
+      //   paddingTop:'1%',
+      //   marginTop:'-8.5%',
+      //   marginLeft:'52%'
+      // },
+      // a4SelectBtn:{
+      //   backgroundColor:'#f5cd79',
+      //   paddingLeft:'12%',
+      //   paddingRight:'12%',
+      //   paddingBottom:'0.5%',
+      //   paddingTop:'1%',
+      //   marginTop:'1.5%',
+      //   marginLeft:'-50%'
+      // },
+      // a3SelectBtn:{
+      //   backgroundColor:'#f5cd79',
+      //   paddingLeft:'12%',
+      //   paddingRight:'12%',
+      //   paddingBottom:'0.5%',
+      //   paddingTop:'1%',
+      //   marginTop:'-7%',
+      //   marginLeft:'15%'
+      // },
+      // cancelBtn:{
+      //   backgroundColor:'#c0392b',
+      //   marginTop:'-20%',
+      //   marginLeft:'52%',
+      //   marginBottom:'0.5%',
+      //   width:'45%',
+      // },
+      // addBtn:{
+      //   position:'absolute',
+      //   backgroundColor:'#00b894',
+      //   marginTop:'28%',
+      //   marginLeft:'52%',
+      //   marginBottom:'0.5%',
+      //   width:'36%',
+      // },
+      // abstractBtn:{
+      //   backgroundColor:'#f5cd79',
+      //   paddingLeft:'5%',
+      //   paddingRight:'5%',
+      //   borderColor:'black',
+      //   marginBottom:'0.5%',
+      //   width:'45%',
+      //   marginLeft:'-20%'
+      // },
+      // dropDownBtn:{
+      //   backgroundColor:'#f5cd79',
+      //   paddingLeft:'3%',
+      //   paddingRight:'3%',
+      //   marginTop:'-5.75%',
+      //   marginLeft:'55%',
+      //   flexDirection: 'column',
+      // },
       commonBtnText:{
         fontSize:20,
-        fontWeight:'bold'
+        fontWeight:'bold',
+        margin: 0,
+        padding : 0
       },
       processBtn:{
         backgroundColor:'#ffcccc',
@@ -728,21 +728,22 @@ const styles= StyleSheet.create({
         backgroundColor:'#ff7675',
         marginTop:'15%', //change again
         marginBottom:'5%',
-        paddingLeft:'30%',
-        paddingRight:'30%',
+        paddingLeft:'10%',
+        paddingRight:'10%',
         paddingTop:'1%',
         paddingBottom:'2%',
         borderRadius:3
       },
       searchResultsContainer: {
         position:'absolute',
-        marginTop: '45%',
+        marginTop: '47%',
         flexDirection: 'row',
+        paddingLeft: 25,
         //alignItems: 'center',
         width:'99%',
       },
       searchResultItem: {
-        backgroundColor: '#3498db',
+        backgroundColor: '#fff',
         padding: 10,
         marginVertical: 5,
         marginRight: 2,
@@ -774,6 +775,58 @@ const styles= StyleSheet.create({
         height:180,
         marginTop:'-43%'
       },
+
+      ImageBackground : {
+        width: '100%',
+        height: '150%',
+        position: 'absolute',
+        flex: 1,
+        resizeMode: 'cover', 
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    buttonText : {
+      color: '#fff'
+    },
+
+    buttonArea : {
+      display: 'flex',
+        marginTop:'20%',
+        marginLeft:'-20%',
+        flex: 2,
+      flexDirection: 'row',
+        // marginBottom: 25,
+        rowGap: 1,
+        maxWidth : '70%'
+
+    },
+
+    selectorHeaderText: {
+      color: '#000',
+      fontWeight: 'bold',
+      fontSize : 20 
+    },
+
+    // areaButton : {
+    //   padding : 5,
+    //   paddingBottom: -5,
+    //   margin : 10,
+    //   backgroundColor : '#522b6e'
+    // },
+
+    dropdown : {
+      fontSize: 12,
+      width : 200,
+      height : 40,
+      borderWidth: 0.5,
+      marginLeft : 10,
+      borderRadius: 8,
+      paddingLeft : 15,
+      color: '#000000', 
+      backgroundColor: 'white',
+      placeholderTextColor: '#000000',
+    }
           
   })
     

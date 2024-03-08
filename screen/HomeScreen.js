@@ -9,7 +9,7 @@ const HomeScreen = ({navigation}) => {
     <View style={styles.body}>
 
       <ImageBackground 
-        source={require('../assets/home.jpg')}
+        source={require('../assets/home2.jpg')}
         className="h-full w-full absolute"
         style={styles.ImageBackground}
       />
@@ -76,17 +76,18 @@ const styles= StyleSheet.create({
       flex:1
     },
     textOne:{
-      color: '#991224',
+      color: '#cc0808',
       marginTop: '15%',
       marginBottom:'8%',
       fontSize: 35,
-      fontWeight: '900'
+      fontWeight: '900',
+      marginLeft: 15
     },
     btnSec:{
-      backgroundColor: '#3c6382',
-      width:'85%',
-      height:'14%',
-      margin: '2%',
+      backgroundColor: '#cf780e',
+      width:'80%',
+      height:'12%',
+      margin: '4%',
       borderRadius: 40,
       shadowColor: '#000',
       shadowOffset: { width: 4, height: 4 },
@@ -97,7 +98,7 @@ const styles= StyleSheet.create({
       justifyContent: 'center',
       borderRadius: 8,
       height:'100%',
-      backgroundColor: '#487eb0',
+      backgroundColor: '#cf780e',
       borderRadius: 40
     },
     btnText:{
